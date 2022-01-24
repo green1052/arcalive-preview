@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name arcalive-preview
-// @version 1.0.0
+// @version 1.0.1
 // @author green1052
 // @description 아카라이브 게시글을 우클릭으로 미리 볼 수 있게 합니다.
 // @match http*://arca.live/b/*
@@ -86,7 +86,7 @@ const observer = new MutationObserver(() => {
 
             article.setAttribute("data-preview", String(isPreview));
 
-            const [, slug, index] = /\/b\/(.*)\/(\d*)\?p=1/g.exec(article.getAttribute("href"));
+            const [, slug, index] = /\/b\/(.*)\/(\d*)\?p=\/g.exec(article.getAttribute("href"));
 
             if (!slug || !index) return;
 
