@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name arcalive-preview
-// @version 1.0.3
+// @version 1.0.4
 // @author green1052
 // @description 아카라이브 게시글을 우클릭으로 미리 볼 수 있게 합니다.
 // @match http*://arca.live/b/*
@@ -29,7 +29,7 @@
             GM_xmlhttpRequest({
                 url: `https://arca.live/api/app/view/article/${slug}/${index}`,
                 headers: {
-                    "user-agent": "live.arca.android/0.8.313",
+                    "user-agent": "live.arca.android/0.8.326",
                     "accept-encoding": "gzip"
                 },
                 responseType: "json",
@@ -69,7 +69,7 @@
             div.style.display = "none";
             div.style.overflow = "auto";
 
-            if (JSON.parse(decodeURIComponent(Cookies.get("display-config")))["theme.background"] === "dark" || matchMedia("(prefers-color-scheme: dark)").matches) {
+            if ((Cookies.get("display-config") !== undefined && JSON.parse(decodeURIComponent(Cookies.get("display-config")))["theme.background"] === "dark") || matchMedia("(prefers-color-scheme: dark)").matches) {
                 div.style.backgroundColor = "var(--color-bg-main)";
                 div.style.borderColor = "var(--color-border-outer)";
             } else {
