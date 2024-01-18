@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name arcalive-preview
-// @version 1.0.4
+// @version 1.0.5
 // @author green1052
 // @description 아카라이브 게시글을 우클릭으로 미리 볼 수 있게 합니다.
 // @match http*://arca.live/b/*
@@ -50,7 +50,7 @@
     function makePreview() {
         "use strict";
 
-        const articles = document.querySelectorAll("a[class=vrow]:not([data-preview])");
+        const articles = document.querySelectorAll("a[class*=vrow]:not([data-preview])");
 
         for (const article of articles) {
             article.setAttribute("data-preview", "false");
