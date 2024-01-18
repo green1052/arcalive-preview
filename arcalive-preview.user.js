@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name arcalive-preview
-// @version 1.0.5
+// @version 1.0.6
 // @author green1052
 // @description 아카라이브 게시글을 우클릭으로 미리 볼 수 있게 합니다.
 // @match http*://arca.live/b/*
@@ -9,7 +9,8 @@
 // @noframes
 // @license GPLv3
 // @grant GM_xmlhttpRequest
-// @require https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js
+// @grant GM_addStyle
+// @require https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js
 // @homepageURL	https://github.com/green1052/arcalive-preview
 // @downloadURL https://raw.githubusercontent.com/green1052/arcalive-preview/main/arcalive-preview.user.js
 // ==/UserScript==
@@ -59,7 +60,7 @@
             div.className = "preview";
             div.style.position = "absolute";
             div.style.top = "2.3em";
-            div.style.zIndex = "1";
+            div.style.zIndex = "999";
             div.style.padding = "5px";
             div.style.border = "1px solid";
             div.style.borderRadius = "5px";
@@ -87,14 +88,22 @@
 
                 const isPreview = !JSON.parse(article.getAttribute("data-preview"));
 
-                article.setAttribute("data-preview", String(isPreview));
-
                 const [, slug, index] = /\/b\/(.*)\/(\d*)\?p=\d/g.exec(article.getAttribute("href"));
 
                 if (!slug || !index) return;
 
-                if (article.querySelector(".vrow-preview") !== null)
+                if (article.querySelector(".vrow-preview")) {
                     article.querySelector(".vrow-preview").style.display = isPreview ? "none" : null;
+                }
+
+                if (isPreview) {
+                    const old = document.querySelector("a[class*=vrow][data-preview=true] > .preview");
+
+                    if (old) {
+                        old.parentElement.setAttribute("data-preview", "false");
+                        old.style.display = "none";
+                    }
+                }
 
                 const preview = article.querySelector(".preview");
                 preview.style.display = isPreview === true ? "initial" : "none";
@@ -102,6 +111,7 @@
                 try {
                     const {content} = await getArticle(slug, index);
                     preview.innerHTML = `<div>${content}</div>`;
+                    article.setAttribute("data-preview", String(isPreview));
                 } catch {
 
                 }
@@ -116,5 +126,6 @@
         subtree: true
     });
 
+    GM_addStyle("div.preview img { width: 100%; height: auto; }");
     makePreview();
 })();
